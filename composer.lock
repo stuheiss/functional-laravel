@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a16c3c541bd99241cab1c21ce8e83ac",
+    "content-hash": "5dc159379a5e028b9b39f43e04feff9d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -593,6 +593,54 @@
                 }
             ],
             "time": "2020-10-22T13:57:20+00:00"
+        },
+        {
+            "name": "functional-php/fantasy-land",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/functional-php/fantasy-land.git",
+                "reference": "1e2366e68057bbc7a65d58dd663324eb9b299775"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/functional-php/fantasy-land/zipball/1e2366e68057bbc7a65d58dd663324eb9b299775",
+                "reference": "1e2366e68057bbc7a65d58dd663324eb9b299775",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2",
+                "giorgiosironi/eris": "^0.9",
+                "phpunit/phpunit": "^5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FunctionalPHP\\": "./src"
+                },
+                "files": [
+                    "src/FantasyLand/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriel Habryn",
+                    "email": "widmogrod+github@gmail.com"
+                }
+            ],
+            "description": "Specification for interoperability of common algebraic structures in PHP",
+            "support": {
+                "issues": "https://github.com/functional-php/fantasy-land/issues",
+                "source": "https://github.com/functional-php/fantasy-land/tree/1.0.1"
+            },
+            "time": "2021-01-19T18:06:19+00:00"
         },
         {
             "name": "graham-campbell/result-type",
@@ -4862,6 +4910,76 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.9.1"
             },
             "time": "2020-07-08T17:02:28+00:00"
+        },
+        {
+            "name": "widmogrod/php-functional",
+            "version": "6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/widmogrod/php-functional.git",
+                "reference": "a1a4edc7f135c4b9364afadcb23d91629255b06c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/widmogrod/php-functional/zipball/a1a4edc7f135c4b9364afadcb23d91629255b06c",
+                "reference": "a1a4edc7f135c4b9364afadcb23d91629255b06c",
+                "shasum": ""
+            },
+            "require": {
+                "functional-php/fantasy-land": "^1",
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2",
+                "giorgiosironi/eris": "^0.9",
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Widmogrod\\": "./src"
+                },
+                "files": [
+                    "src/Functional/array.php",
+                    "src/Functional/functions.php",
+                    "src/Functional/miscellaneous.php",
+                    "src/Functional/listt.php",
+                    "src/Functional/zipping.php",
+                    "src/Functional/sublist.php",
+                    "src/Functional/infinit.php",
+                    "src/Functional/predicates.php",
+                    "src/Functional/strings.php",
+                    "src/Functional/monoid.php",
+                    "src/Functional/setoid.php",
+                    "src/Monad/Either/functions.php",
+                    "src/Monad/Maybe/functions.php",
+                    "src/Monad/Free/functions.php",
+                    "src/Monad/IO/functions.php",
+                    "src/Monad/IO/errors.php",
+                    "src/Monad/Reader/functions.php",
+                    "src/Monad/State/functions.php",
+                    "src/Monad/Writer/functions.php",
+                    "src/Monad/Control/Doo/actions.php",
+                    "src/Monad/Control/Doo/interpretation.php",
+                    "src/Useful/match.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriel Habryn",
+                    "email": "widmogrod@gmail.com"
+                }
+            ],
+            "description": "Functors, Applicative and Monads are fascinating concept. Purpose of this library is to explore them in OOP PHP world.",
+            "support": {
+                "issues": "https://github.com/widmogrod/php-functional/issues",
+                "source": "https://github.com/widmogrod/php-functional/tree/6.0.0"
+            },
+            "time": "2020-10-18T19:52:00+00:00"
         }
     ],
     "packages-dev": [
