@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace example;
 
 use Widmogrod\Functional as f;
-use Widmogrod\Monad\Maybe;
-use function Widmogrod\Functional\valueOf;
-use function Widmogrod\Monad\Free\liftF;
-use Widmogrod\Monad\Free\Pure;
-use function Widmogrod\Functional\compose;
-use function Widmogrod\Functional\flip;
-use function Widmogrod\Functional\join;
+use Widmogrod\Monad\Maybe\Just;
+use Widmogrod\Monad\Maybe\Nothing;
+use Widmogrod\Monad\Maybe\Maybe;
 use function Widmogrod\Monad\Maybe\just;
 use function Widmogrod\Monad\Maybe\nothing;
 
@@ -34,7 +30,7 @@ class MaybeSafeDivTest extends \PHPUnit\Framework\TestCase
     */
 
     // maybeSafeDiv :: Int -> Int -> Maybe Int
-    private function maybeSafeDiv($dividend, $divisor)
+    private function maybeSafeDiv(int $dividend, int $divisor): Maybe
     {
         return $divisor == 0
             ? nothing()
@@ -42,15 +38,15 @@ class MaybeSafeDivTest extends \PHPUnit\Framework\TestCase
     }
 
     // Val :: Int -> Just Int
-    private function Val($val)
+    private function Val(int $val): Maybe
     {
         return just($val);
     }
 
     // Div :: expr -> expr -> Maybe Int
-    private function Div($dividend, $divisor)
+    private function Div(Maybe $dividend, Maybe $divisor): Maybe
     {
-        return ($divisor instanceof Maybe\Nothing) || ($dividend instanceof Maybe\Nothing)
+        return ($divisor instanceof Nothing) || ($dividend instanceof Nothing)
             ? nothing()
             : $this->maybeSafeDiv($dividend->extract(), $divisor->extract());
     }
@@ -69,7 +65,7 @@ class MaybeSafeDivTest extends \PHPUnit\Framework\TestCase
     public function test_maybe_prevents_divide_by_zero()
     {
         $unsafeResult = $this->maybeSafeDiv(1, 0);
-        $this->assertInstanceOf(Maybe\Nothing::class, $unsafeResult);
+        $this->assertInstanceOf(Nothing::class, $unsafeResult);
         $this->assertEquals(nothing(), $unsafeResult);
     }
 
@@ -77,7 +73,7 @@ class MaybeSafeDivTest extends \PHPUnit\Framework\TestCase
     {
         $safeResult = $this->maybeSafeDiv(1, 1);
         $safeQuotient = 1;
-        $this->assertInstanceOf(Maybe\Just::class, $safeResult);
+        $this->assertInstanceOf(Just::class, $safeResult);
         $this->assertEquals(just($safeQuotient), $safeResult);
     }
 }
