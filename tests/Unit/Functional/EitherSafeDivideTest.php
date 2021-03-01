@@ -5,29 +5,32 @@ declare(strict_types=1);
 namespace example;
 
 use Widmogrod\Functional as f;
-use Widmogrod\Monad\Either;
-
-function eitherSafeDivide($dividend, $divisor)
-{
-    return $divisor == 0
-        ? Either\Left::of('Error: divide by zero')
-        : Either\Right::of($dividend / $divisor);
-}
-
+use Widmogrod\Monad\Either\Left;
+use Widmogrod\Monad\Either\Right;
+use Widmogrod\Monad\Either\Either;
+use function Widmogrod\Monad\Either\left;
+use function Widmogrod\Monad\Either\right;
 class EitherSafeDivideTest extends \PHPUnit\Framework\TestCase
 {
-    public function test_either_prevents_divide_by_zero()
+    public function eitherSafeDivide($dividend, $divisor): Either
     {
-        $unsafeResult = eitherSafeDivide(1, 0);
-        $this->assertInstanceOf(Either\Left::class, $unsafeResult);
-        $this->assertEquals(Either\Left::of('Error: divide by zero'), $unsafeResult);
+        return $divisor == 0
+            ? left('Error: divide by zero')
+            : right($dividend / $divisor);
+    }
+
+        public function test_either_prevents_divide_by_zero()
+    {
+        $unsafeResult = $this->eitherSafeDivide(1, 0);
+        $this->assertInstanceOf(Left::class, $unsafeResult);
+        $this->assertEquals(left('Error: divide by zero'), $unsafeResult);
     }
 
     public function test_either_allows_divide_when_not_zero()
     {
-        $safeResult = eitherSafeDivide(1, 1);
+        $safeResult = $this->eitherSafeDivide(1, 1);
         $safeQuotient = 1;
-        $this->assertInstanceOf(Either\Right::class, $safeResult);
-        $this->assertEquals(Either\Right::of($safeQuotient), $safeResult);
+        $this->assertInstanceOf(Right::class, $safeResult);
+        $this->assertEquals(right($safeQuotient), $safeResult);
     }
 }
