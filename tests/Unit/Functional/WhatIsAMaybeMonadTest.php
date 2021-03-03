@@ -54,6 +54,7 @@ declare(strict_types=1);
 
 namespace example;
 
+use Symfony\Component\HttpKernel\EventListener\DumpListener;
 use Widmogrod\Functional as f;
 use Widmogrod\Monad\Maybe\Maybe;
 use Widmogrod\Monad\Maybe\Just;
@@ -61,8 +62,8 @@ use Widmogrod\Monad\Maybe\Nothing;
 
 use function Widmogrod\Functional\fromIterable;
 use function Widmogrod\Functional\fromValue;
-use function Widmogrod\Monad\Maybe\Just;
-use function Widmogrod\Monad\Maybe\Nothing;
+use function Widmogrod\Monad\Maybe\just;
+use function Widmogrod\Monad\Maybe\nothing;
 
 /**
  * 9.1  Monadic Classes
@@ -156,18 +157,48 @@ class WhatIsAMaybeMonadTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(just(43), just(42)->bind(fn($x) => just($x + 1)));
     }
 
+    // Map applies a function to a wrapped value
     // map :: (a -> b) m a -> m b
     public function test_maybe_map()
     {
-        $this->assertEquals(just(0), just(0)->map(fn($x) => sqrt($x)));
-        $this->assertEquals(just('NAN'), just(-9)->map(fn($x) => sqrt($x)));
+        $sqrt = fn($x) => sqrt($x);
+
+        // map over nothing
+        $this->assertEquals(nothing(), nothing()->map($sqrt));
+
+        // map over just(a)
+        $this->assertEquals(just(3), just(9)->map($sqrt));
+        $this->assertEquals(just(0), just(0)->map($sqrt));
+        $this->assertEquals(just('NAN'), just(-9)->map($sqrt));
 
         // a loose (==) match on value passes
-        $this->assertEquals(just(3), just(9)->map(fn($x) => sqrt($x)));
+        $this->assertEquals(just(3), just(9)->map($sqrt));
 
         // not really a strict match on value
-        $this->assertEquals(just(3.0), just(9)->map(fn($x) => sqrt($x)));
+        $this->assertEquals(just(3.0), just(9)->map($sqrt));
         // a truely strict match on value
-        $this->assertTrue(just(3.0)->extract() === (just(9)->map(fn($x) => sqrt($x)))->extract());
+        $this->assertTrue(just(3.0)->extract() === (just(9)->map($sqrt))->extract());
+    }
+
+    // Applicatives apply a wrapped function to a wrapped value
+    // ap :: m a -> (a -> b) -> m b
+    public function test_maybe_ap()
+    {
+        // apply a just(fn) to a just(val)
+        $add3 = fn($x) => $x + 3;
+        $res = just($add3)->ap(just(2));
+        $this->assertEquals(just(5), $res);
+
+        // for Applicatives
+        // apply a just(fn) to 2 just(val)
+        // (*) <$> Just 5 <*> Just 3)
+        // liftA2 (*) (Just 5) (Just 3)
+        $mul = (fn($x, $y) => $x * $y);
+        $res = f\liftA2($mul, just(5), just(3));
+        $this->assertEquals(just(15), $res);
+
+        // same thing for Monads
+        $res = f\liftM2($mul, just(5), just(3));
+        $this->assertEquals(just(15), $res);
     }
 }
