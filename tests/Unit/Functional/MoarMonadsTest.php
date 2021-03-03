@@ -6,10 +6,15 @@ namespace example;
 
 use Symfony\Component\HttpKernel\EventListener\DumpListener;
 use Widmogrod\Functional as f;
-use function Widmogrod\Monad\Maybe\just;
+use Widmogrod\Monad as m;
 use Widmogrod\Monad\Writer as W;
 use Widmogrod\Primitive\Stringg as S;
 use function Widmogrod\Monad\Either\right;
+use function Widmogrod\Functional\foldM;
+use function Widmogrod\Functional\fromIterable;
+use function Widmogrod\Functional\fromNil;
+use function Widmogrod\Monad\Maybe\just;
+use function Widmogrod\Monad\Maybe\nothing;
 
 class MoarMonadsTest extends \PHPUnit\Framework\TestCase
 {
@@ -91,5 +96,53 @@ Reject odd number 25.
     }
 
     // foldM :: (Monad m) => (a -> b -> m a) -> a -> [b] -> m a
-    // examples please!!!
+    public function test_it_folds_over_maybe_list()
+    {
+        // returns nothing if acc > 10, else sum of vals as monad
+        $fn = fn($acc, $i) => $acc > 10 ? nothing() : just($acc + $i);
+
+        $res = f\foldM($fn, 0, f\fromIterable([1,2,3,4,5]));
+        $this->assertEquals(nothing(), $res);
+
+        $res = f\foldM($fn, 0, f\fromIterable([1,2,3,4]));
+        $this->assertEquals(just(10), $res);
+    }
+
+    /**
+     * @dataProvider provideData
+     */
+    public function test_it_should_work_with_maybe(
+        $list,
+        $expected
+    ) {
+        $addSingleDigit = function ($acc, $i) {
+            return $i > 9 ? nothing() : just($acc + $i);
+        };
+        $this->assertEquals(
+            $expected,
+            foldM($addSingleDigit, 0, $list)
+        );
+    }
+
+    public function provideData()
+    {
+        return [
+            'just' => [
+                '$list' => fromIterable([1, 3, 5, 7]),
+                '$expected' => just(16)
+            ],
+            'nothing' => [
+                '$list' => fromIterable([1, 3, 42, 7]),
+                '$expected' => nothing(),
+            ],
+            'empty array' => [
+                '$list' => fromNil(),
+                '$expected' => fromNil(),
+            ],
+            'traversable' => [
+                '$list' => fromIterable(new \ArrayIterator([1, 3, 5, 7])),
+                '$expected' => just(16)
+            ],
+        ];
+    }
 }
